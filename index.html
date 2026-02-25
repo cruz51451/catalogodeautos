@@ -50,6 +50,11 @@
 
         .logo span { color: var(--accent); }
 
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+
         .nav-links a {
             color: var(--text-light);
             text-decoration: none;
@@ -73,6 +78,39 @@
         .nav-links .btn-nav:hover {
             background: var(--accent);
             color: white;
+        }
+
+        /* --- AJUSTES PARA MÓVIL (Responsivo) --- */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column; /* Pone el logo arriba y los links abajo */
+                padding: 20px 5%;
+                text-align: center;
+            }
+
+            .logo {
+                margin-bottom: 20px;
+            }
+
+            .nav-links {
+                flex-direction: row; /* Mantiene los links en fila pero con menos espacio */
+                justify-content: center;
+                flex-wrap: wrap; /* Si no caben, bajan solos sin romperse */
+                gap: 15px;
+            }
+
+            .nav-links a {
+                margin-left: 0; /* Quitamos el margen lateral fijo */
+                font-size: 0.75rem;
+            }
+
+            .nav-links .btn-nav {
+                padding: 8px 15px; /* Botón un poco más pequeño en móvil */
+            }
+            
+            .hero-content h1 {
+                font-size: 2.5rem; /* Evita que el título se vea gigante en móvil */
+            }
         }
 
         /* Hero Section Premium */
@@ -125,7 +163,7 @@
             box-shadow: 0 15px 30px rgba(230, 57, 70, 0.5);
         }
 
-        /* Sección Identidad - Glassmorphism */
+        /* Sección Identidad */
         .identity {
             padding: 100px 8%;
             background: var(--dark-soft);
@@ -199,8 +237,7 @@
         <div class="nav-links">
             <a href="#quienes-somos">Nosotros</a>
             <a href="#identidad">Identidad</a>
-            <a href="catalogo.html" class="btn-nav">Explorar Catálogo</a>
-        </div>
+            <a href="catalogo.html" class="btn-nav">Catálogo</a> </div>
     </nav>
 
     <section class="hero">
@@ -234,9 +271,9 @@
         </div>
     </section>
 
-    <footer>
+    <footer id="identidad">
         &copy; 2026 AVANCELUXURY GROUP. TODOS LOS DERECHOS RESERVADOS.
     </footer>     
 
 </body>
-</html> 
+</html>
