@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoElite | Catálogo Exclusivo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #e63946;
+            --dark: #0a0a0a;
+            --dark-soft: #161616;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--dark);
+            color: white;
+            margin: 0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- BOTÓN VOLVER AL INICIO (Navegación) --- */
+        .nav-top {
+            position: absolute;
+            top: 20px;
+            left: 8%;
+            z-index: 10;
+        }
+
+        .btn-home {
+            text-decoration: none;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 20px;
+            border-radius: 4px;
+            transition: 0.3s;
+        }
+
+        .btn-home:hover {
+            background: white;
+            color: black;
+        }
+
+        header {
+            background: linear-gradient(to bottom, #000, var(--dark));
+            padding: 100px 8% 60px;
+            text-align: center;
+            border-bottom: 1px solid #222;
+        }
+
+        .container {
+            padding: 60px 8%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+            perspective: 1000px;
+        }
+
+        /* --- TARJETAS --- */
+        .car-card {
+            background: var(--dark-soft);
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid #222;
+            transition: transform 0.1s ease, border-color 0.4s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .car-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 15px 35px rgba(230, 57, 70, 0.2);
+        }
+
+        .img-container {
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .car-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.5s;
+        }
+
+        .car-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .info {
+            padding: 30px;
+        }
+
+        .price {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        /* --- BOTÓN FLOTANTE SUBIR --- */
+        #btnArriba {
+            display: none;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 99;
+            border: none;
+            background-color: var(--accent);
+            color: white;
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 20px;
+            box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
+            transition: 0.3s;
+        }
+
+        /* --- MODAL Y SLIDER --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(15px);
+        }
+
+        .modal-content {
+            background-color: var(--dark-soft);
+            margin: 2% auto;
+            padding: 40px;
+            width: 90%;
+            max-width: 1100px;
+            border-radius: 8px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 40px;
+        }
+
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        .slider-wrapper {
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            height: 100%;
+        }
+
+        .slider-wrapper img {
+            min-width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .color-btn {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            border: 2px solid #444;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .live-view {
+            display: inline-block;
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            margin-bottom: 10px;
+            border: 1px solid #2ecc71;
+        }
+
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            z-index: 10;
+            border-radius: 50%;
+        }
+
+        .prev {
+            left: 10px;
+        }
+
+        .next {
+            right: 10px;
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            color: #fff;
+            font-size: 35px;
+            cursor: pointer;
+        }
+
+        /* Botón secundario en modal */
+        .btn-secondary {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #666;
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: 0.3s;
+        }
+
+        .btn-secondary:hover {
+            color: white;
+        }
+
+        @media (max-width: 850px) {
+            .modal-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .slider-container {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="nav-top">
+        <a href="index.html" class="btn-home">← Volver al Inicio</a>
+    </div>
+
+    <button onclick="subirAlInicio()" id="btnArriba" title="Volver arriba">↑</button>
+
+    <header id="inicio">
+        <h1>AVANCE <span>2026</span></h1>
+        <p>Ingeniería de vanguardia para conductores exigentes</p>
+    </header>
+
+    <div class="container">
+        <div class="car-card" onmousemove="tiltEffect(event, this)" onmouseleave="resetTilt(this)"
+            onclick="openModal('NISSAN NP 300 2020', '$285,000 ', 'V12 Turbo • 650 HP', 'La joya de la corona. Este modelo cuenta con interiores de alcántara, frenos cerámicos y un sistema de escape activo.', ['nissannp3/roja1.png', 'nissannp3/roja7.png', 'nissannp3/roja8.png', 'nissannp3/roja4.png'])">
+            <div class="img-container"><img src="nissannp3/roja1.png"></div>
+
+            <div class="info">
+                <h3>NISSAN NP 300 2020</h3><span class="price">$285,000</span>
+            </div>
+        </div>
+
+        <div class="car-card" onmousemove="tiltEffect(event, this)" onmouseleave="resetTilt(this)"
+            onclick="openModal('Toyota Tacoma 2014', '$200,000 ', '•RAPIDA • 91,000KM •AUTOMATICA ', 'Diseñada para terrenos hostiles sin perder la elegancia. MotorV.6.', ['taco14/taco (2).jpeg', 'taco14/taco (1).jpeg', 'taco14/taco (4).jpeg', 'taco14/taco (5).jpeg', 'taco14/taco (9).jpeg', 'taco14/taco (12).jpeg', 'taco14/taco (13).jpeg', 'taco14/taco (11).jpeg', 'taco14/taco (3).jpeg', 'taco14/taco (7).jpeg'])">
+            <div class="img-container"><img src="taco14/taco (2).jpeg"></div>
+            <div class="info">
+                <h3>Toyota Tacoma 2014</h3><span class="price">$200,000 </span>
+            </div>
+        </div>
+
+        <div class="car-card" onmousemove="tiltEffect(event, this)" onmouseleave="resetTilt(this)"
+            onclick="openModal('FORD F-150  2003', '$150,000 ', '•MOTOR 5,4 V8 • 106,000KM • AUTOMATICA', 'Hermosa FORD F-150 lista para uso rudo.', ['ford150azul/for1 (9).jpeg', 'ford150azul/for1 (6).jpeg', 'ford150azul/for1 (3).jpeg', 'ford150azul/for1 (1).jpeg', 'ford150azul/for1 (2).jpeg', 'ford150azul/for1 (7).jpeg', 'ford150azul/for1 (10).jpeg'])">
+            <div class="img-container"><img src="ford150azul/for1 (4).jpeg"></div>
+            <div class="info">
+                <h3>FORD F-150 2003</h3><span class="price">$150,000</span>
+            </div>
+        </div>
+
+        <div class="car-card" onmousemove="tiltEffect(event, this)" onmouseleave="resetTilt(this)"
+            onclick="openModal('Honda Civic Confortline 2017', '$190,000 ', '•MOTOR 2.0 Exl • 94,000KM • AUTOMATICO', 'Hermoso Honda Civic listo para manejar.', ['hcivic17/civi (6).jpeg', 'hcivic17/civi (2).jpeg',  'hcivic17/civi (3).jpeg', 'hcivic17/civi (9).jpeg', 'hcivic17/civi (7).jpeg'])">
+            <div class="img-container"><img src="hcivic17/civi (1).jpeg"></div>
+            <div class="info">
+                <h3>HONDA CIVIC CONFORTLINE 2017</h3>
+                <spa n class="price">$190,000</span>
+            </div>
+        </div>
+
+        <div class="car-card" onmousemove="tiltEffect(event, this)" onmouseleave="resetTilt(this)"
+            onclick="openModal('Toyota Tacoma 4X4 2017', '$250,000 ', '•MOTOR 3.5L V6 • 70,000KM • AUTOMATICA', 'Hermosa Toyota Tacoma listo para manejar.', ['taco17/toy1 (2).jpeg', 'taco17/toy1 (3).jpeg',  'taco17/toy1 (5).jpeg', 'taco17/toy1 (7).jpeg'])">
+            <div class="img-container"><img src="taco17/toy1 (6).jpeg"></div>
+            <div class="info">
+                <h3>TOYOTA TACOMA 4X4 2017</h3>
+                <spa n class="price">$250,000</span>
+            </div>
+        </div>
+
+        <div class="car-card" onmousemove="tiltEffect(event, this)" onmouseleave="resetTilt(this)"
+            onclick="openModal('Volkswagen Jetta Sport 2016', '$190,000 ', '• 70,000KM • ESTANDAR', 'Hermoso Jetta Sport listo para manejar.', ['jet2016/jet2016 (4).jpeg', 'jet2016/jet2016 (7).jpeg',  'jet2016/jet2016 (13).jpeg', 'jet2016/jet2016 (16).jpeg', 'jet2016/jet2016 (8).jpeg', 'jet2016/jet2016 (15).jpeg', 'jet2016/jet2016 (17).jpeg'])">
+            <div class="img-container"><img src="jet2016/jet2016 (1).jpeg"></div>
+            <div class="info">
+                <h3>VOLKSWAGEN JETTA SPORT 2016</h3>
+                <spa n class="price">$190,000</span>
+            </div>
+        </div>
+
+        <div class="car-card" onmousemove="tiltEffect(event, this)" onmouseleave="resetTilt(this)"
+            onclick="openModal('Volkswagen Jetta GLI 2013', '$120,000 ', '• 98,320KM • ESTANDAR', ' Jetta gli listo para manejar.', ['jet2013/jet2013 (6).jpeg', 'jet2013/jet2013 (10).jpeg',  'jet2013/jet2013 (2).jpeg', 'jet2013/jet2013 (9).jpeg', 'jet2013/jet2013 (8).jpeg',])">
+            <div class="img-container"><img src="jet2013/jet2013 (1).jpeg"></div>
+            <div class="info">
+                <h3>VOLKSWAGEN JETTA GLI 2013</h3>
+                <spa n class="price">$120,000</span>
+            </div>
+        </div>
+
+        <div class="car-card" onmousemove="tiltEffect(event, this)" onmouseleave="resetTilt(this)"
+            onclick="openModal('FORD F-150 2012', '$210,000 ', '• MOTOR 3.7 V6 • 80,000KM • AUTOMATICA', ' FORD F-150 listo para manejar todo terreno.', ['ford150negra/f150negra(2).jpeg', 'ford150negra/f150negra(4).jpeg','ford150negra/f150negra (1).jpeg', 'ford150negra/f150negra (3).jpeg', 'ford150negra/f150negra (4).jpeg'])">
+            <div class="img-container"><img src="ford150negra/f150negra(1).jpeg"></div>
+            <div class="info">
+                <h3>FORD F-150 2012</h3>
+                <spa n class="price">$210,000</span>
+            </div>
+        </div>
+
+        <div class="car-card" onmousemove="tiltEffect(event, this)" onmouseleave="resetTilt(this)"
+            onclick="openModal('Honda Civic SI 2014', '$155,000 ', '• MODELO SI • 80,000KM • AUTOMATICO', ' Honda Civic SI El maodelo mas equipado.', ['civicsi14/cisi14 (3).jpeg', 'civicsi14/cisi14 (12).jpeg','civicsi14/cisi14 (13).jpeg','civicsi14/cisi14 (14).jpeg','civicsi14/cisi14 (15).jpeg','civicsi14/cisi14 (17).jpeg','civicsi14/cisi14 (2).jpeg','civicsi14/cisi14 (7).jpeg','civicsi14/cisi14 (8).jpeg','civicsi14/cisi14 (18).jpeg',])">
+            <div class="img-container"><img src="civicsi14/cisi14 (1).jpeg"></div>
+            <div class="info">
+                <h3>HONDA CIVIC SI 2014</h3>
+                <spa n class="price">$155,000</span>
+            </div>
+        </div>
+
+        <div class="car-card" onmousemove="tiltEffect(event, this)" onmouseleave="resetTilt(this)"
+            onclick="openModal('Toyota Tacoma 2011', '$150,000 ', ' • 132,000KM • AUTOMATICA', ' Toyota Tacoma lista para uso rudo.', ['taco11/taco11 (3).jpeg','taco11/taco11 (6).jpeg','taco11/taco11 (8).jpeg','taco11/taco11 (2).jpeg','taco11/taco11 (9).jpeg','taco11/taco11 (4).jpeg','taco11/taco11 (7).jpeg','taco11/taco11 (5).jpeg'])">
+            <div class="img-container"><img src="taco11/taco11 (1).jpeg"></div>
+            <div class="info">
+                <h3>TOYOTA TACOMA 2011</h3>
+                <spa n class="price">$150,000</span>
+            </div>
+        </div>
+
+        <div class="car-card" onmousemove="tiltEffect(event, this)" onmouseleave="resetTilt(this)"
+            onclick="openModal('Nissan NP300 2018', '$200,000 ', ' • Motor2.4 • 132,000KM • AUTOMATICA', ' Nissan NP300 lista para uso rudo y gran capacidad de carga.', ['nisanp18/nis18 (13).jpeg','nisanp18/nis18 (16).jpeg','nisanp18/nis18 (10).jpeg','nisanp18/nis18 (8).jpeg','nisanp18/nis18 (6).jpeg','nisanp18/nis18 (3).jpeg','nisanp18/nis18 (11).jpeg'])">
+            <div class="img-container"><img src="nisanp18/nis18 (1).jpeg"></div>
+            <div class="info">
+                <h3>NISSAN NP300 2018</h3>
+                <spa n class="price">$200,000</span>
+            </div>
+        </div>
+
+
+        <div class="car-card" onmousemove="tiltEffect(event, this)" onmouseleave="resetTilt(this)"
+            onclick="openModal('Seat Ibiza 2018', '$170,000 ', ' • Fr1.2 • 78,000KM • Manual', ' Seat Ibiza lista para manejar.', ['ibiza/ibiza18 (6).jpeg','ibiza/ibiza18 (5).jpeg','ibiza/ibiza18 (2).jpeg','ibiza/ibiza18 (7).jpeg','ibiza/ibiza18 (3).jpeg','ibiza/ibiza18 (4).jpeg'])">
+            <div class="img-container"><img src="ibiza/ibiza18 (1).jpeg"></div>
+            <div class="info">
+                <h3>SEAT IBIZA 2018</h3>
+                <spa n class="price">$170,000</span>
+            </div>
+        </div>
+
+        <div class="car-card" onmousemove="tiltEffect(event, this)" onmouseleave="resetTilt(this)"
+            onclick="openModal('Ford Ranger XLT 2008 ', '$115,000 ', ' • Motor3.0 • 108,000KM • Manual', ' Ranger XLT lista para trabajo rudo.', ['fxlt208/xltfo8 (2).jpeg','fxlt208/xltfo8 (4).jpeg','fxlt208/xltfo8 (5).jpeg','fxlt208/xltfo8 (7).jpeg','fxlt208/xltfo8 (3).jpeg','fxlt208/xltfo8 (6).jpeg'])">
+            <div class="img-container"><img src="fxlt208/xltfo8 (1).jpeg"></div>
+            <div class="info">
+                <h3>FORD RANGER XLT 2008</h3>
+                <spa n class="price">$115,000</span>
+            </div>
+        </div>
+
+        <div class="car-card" onmousemove="tiltEffect(event, this)" onmouseleave="resetTilt(this)"
+            onclick="openModal('Ford Ranger XLT 2011 ', '$130,000 ', ' • Motor3.0 • 80,000KM • Manual', ' Ranger XLT lista para trabajo rudo.', ['fxlt211/raxlt11 (2).jpeg','fxlt211/raxlt11 (5).jpeg','fxlt211/raxlt11 (4).jpeg','fxlt211/raxlt11 (8).jpeg','fxlt211/raxlt11 (9).jpeg','fxlt211/raxlt11 (12).jpeg','fxlt211/raxlt11 (13).jpeg','fxlt211/raxlt11 (10).jpeg','fxlt211/raxlt11 (7).jpeg',])">
+            <div class="img-container"><img src="fxlt211/raxlt11 (1).jpeg"></div>
+            <div class="info">
+                <h3>FORD RANGER XLT 2011</h3>
+                <spa n class="price">$130,000</span>
+            </div>
+        </div>
+
+        <div class="car-card" onmousemove="tiltEffect(event, this)" onmouseleave="resetTilt(this)"
+            onclick="openModal('Ford Ranger XLT 2011 ', '$130,000 ', ' • Motor3.0 • 92,000KM • Manual', ' Ranger XLT lista para trabajo rudo.', ['fxlt211b/xltb (2).jpeg','fxlt211b/xltb (3).jpeg','fxlt211b/xltb (7).jpeg','fxlt211b/xltb (9).jpeg','fxlt211b/xltb (5).jpeg','fxlt211b/xltb (4).jpeg','fxlt211b/xltb (6).jpeg',])">
+            <div class="img-container"><img src="fxlt211b/xltb (1).jpeg"></div>
+            <div class="info">
+                <h3>FORD RANGER XLT 2011</h3>
+                <spa n class="price">$130,000</span>
+            </div>
+        </div>
+
+
+        <div class="car-card" onmousemove="tiltEffect(event, this)" onmouseleave="resetTilt(this)"
+            onclick="openModal('Ford Ranger XLT 2011 ', '$130,000 ', ' • Motor3.0 • 78,000KM • Manual', ' Ranger XLT lista para trabajo rudo.', ['fxlt11r/xltr11 (4).jpeg','fxlt11r/xltr11 (2).jpeg','fxlt11r/xltr11 (10).jpeg','fxlt11r/xltr11 (11).jpeg','fxlt11r/xltr11 (3).jpeg','fxlt11r/xltr11 (6).jpeg','fxlt11r/xltr11 (8).jpeg',])">
+            <div class="img-container"><img src="fxlt11r/xltr11 (1).jpeg"></div>
+            <div class="info">
+                <h3>FORD RANGER XLT 2011</h3>
+                <spa n class="price">$130,000</span>
+            </div>
+        </div>
+
+        <div class="car-card" onmousemove="tiltEffect(event, this)" onmouseleave="resetTilt(this)"
+            onclick="openModal('Toyota Tacoma 2017 ', '$250,000 ', ' • MotorV.6 • 56,000KM • Manual', ' Toyota Tacoma TRD 4x4 listo para trabajo rudo.', ['taco17g/toy17t (6).jpeg','taco17g/toy17t (2).jpeg','taco17g/toy17t (3).jpeg','taco17g/toy17t (4).jpeg','taco17g/toy17t (7).jpeg','taco17g/toy17t (8).jpeg','taco17g/toy17t (9).jpeg','taco17g/toy17t (5).jpeg',])">
+            <div class="img-container"><img src="taco17g/toy17t (1).jpeg"></div>
+            <div class="info">
+                <h3>TOYOTA TACOMA 2017</h3>
+                <spa n class="price">$250,000</span>
+            </div>
+        </div>
+
+        <div class="car-card" onmousemove="tiltEffect(event, this)" onmouseleave="resetTilt(this)"
+            onclick="openModal('Saveiro Robust 2015 ', '$130,000 ', ' • MotorV.4 • 43,700KM • Manual', ' Saveiro Robust 2015 para trabajo.', ['sav/sav1 (2).jpeg','sav/sav1 (3).jpeg','sav/sav1 (5).jpeg','sav/sav1 (9).jpeg','sav/sav1 (6).jpeg','sav/sav1 (7).jpeg',])">
+            <div class="img-container"><img src="sav/sav1 (1).jpeg"></div>
+            <div class="info">
+                <h3>Volkswagen Saveiro Robust 2015</h3>
+                <spa n class="price">$130,000</span>
+            </div>
+        </div>
+
+        <div class="car-card" onmousemove="tiltEffect(event, this)" onmouseleave="resetTilt(this)"
+            onclick="openModal('Jetta Rilne 2020 ', '$180,000 ', ' • Motor1.4 • 78,000KM • Automatico', ' Jetta Rilne 2020 para comodida.', ['jet2020/jeta2020 (2).jpeg','jet2020/jeta2020 (3).jpeg','jet2020/jeta2020 (5).jpeg','jet2020/jeta2020 (4).jpeg','jet2020/jeta2020 (13).jpeg','jet2020/jeta2020 (8).jpeg','jet2020/jeta2020 (7).jpeg','jet2020/jeta2020 (9).jpeg','jet2020/jeta2020 (10).jpeg','jet2020/jeta2020 (11).jpeg','jet2020/jeta2020 (12).jpeg',])">
+            <div class="img-container"><img src="jet2020/jeta2020 (1).jpeg"></div>
+            <div class="info">
+                <h3>Volkswagen Jetta Rilne 2020</h3>
+                <spa n class="price">$180,000</span>
+            </div>
+        </div>
+
+        <div class="car-card" onmousemove="tiltEffect(event, this)" onmouseleave="resetTilt(this)"
+            onclick="openModal('Saveiro Cross 2017 ', '$170,000 ', ' • Motor1.6 • 87,465KM • Manual', ' Saveiro Cross 2017 para trabajo.', ['savbl/savb (1).jpeg','savbl/savb (6).jpeg','savbl/savb (7).jpeg','savbl/savb (8).jpeg','savbl/savb (11).jpeg','savbl/savb (9).jpeg','savbl/savb (10).jpeg',])">
+            <div class="img-container"><img src="savbl/savb (1).jpeg"></div>
+            <div class="info">
+                <h3>Volkswagen Saveiro Cross 2017</h3>
+                <spa n class="price">$170,000</span>
+            </div>
+        </div>
+
+
+        <div class="car-card" onmousemove="tiltEffect(event, this)" onmouseleave="resetTilt(this)"
+            onclick="openModal('Honda Civic SI 2014 ', '$155,000 ', ' • 48,126KM • Manual', ' Honda Civic SI 2014 para excelente manejo.', ['civicsir14/cisir (1).jpeg','civicsir14/civicr.jpeg','civicsir14/cisir (5).jpeg','civicsir14/cisir (6).jpeg','civicsir14/cisir (2).jpeg','civicsir14/cisir (7).jpeg'])">
+            <div class="img-container"><img src="civicsir14/cisir (1).jpeg"></div>
+            <div class="info">
+                <h3>Honda Civic SI 2014</h3>
+                <spa n class="price">$155,000</span>
+            </div>
+        </div>
+
+
+        <div class="car-card" onmousemove="tiltEffect(event, this)" onmouseleave="resetTilt(this)"
+            onclick="openModal('Honda Civic SI 2014 ', '$155,000 ', ' • 42,689KM • Manual', ' Honda Civic SI 2014 para excelente manejo.', ['civicsi14g/hcivicg14 (2).jpeg','civicsi14g/hcivicg14 (10).jpeg','civicsi14g/hcivicg14 (18).jpeg','civicsi14g/hcivicg14 (16).jpeg','civicsi14g/hcivicg14 (15).jpeg','civicsi14g/hcivicg14 (6).jpeg','civicsi14g/hcivicg14 (7).jpeg','civicsi14g/hcivicg14 (9).jpeg','civicsi14g/hcivicg14 (11).jpeg'])">
+            <div class="img-container"><img src="civicsi14g/hcivicg14 (1).jpeg"></div>
+            <div class="info">
+                <h3>Honda Civic SI 2014</h3>
+                <spa n class="price">$155,000</span>
+            </div>
+        </div>
+
+
+
+        <div class="car-card" onmousemove="tiltEffect(event, this)" onmouseleave="resetTilt(this)"
+            onclick="openModal('Nissan Frontier LE NP300 2014 ', '$140,000 ', '  • Motor4.0 • 74,000KM • Manual', ' Nissan Frontier LE NP300 ideal para trabajo y confiable.', ['nisle14/Nisle14 (14).jpeg','nisle14/Nisle14 (12).jpeg','nisle14/Nisle14 (6).jpeg','nisle14/Nisle14 (3).jpeg','nisle14/Nisle14 (15).jpeg','nisle14/Nisle14 (17).jpeg','nisle14/Nisle14 (18).jpeg','nisle14/Nisle14 (19).jpeg',])">
+            <div class="img-container"><img src="nisle14/Nisle14 (1).jpeg"></div>
+            <div class="info">
+                <h3>Nissan Frontier LE NP300 2014</h3>
+                <spa n class="price">$140,000</span>
+            </div>
+        </div>
+
+
+
+   <div class="car-card" onmousemove="tiltEffect(event, this)" onmouseleave="resetTilt(this)"
+            onclick="openModal('Ford Ranger 2012 Crew Cab', '$140,000 ', ' • Motor2.3 • 86,000KM • Manual', ' Ford Ranger 2012 para trabajo.', ['fr12/fr12 (1).jpeg','fr12/fr12 (4).jpeg','fr12/fr12 (3).jpeg','fr12/fr12 (2).jpeg','fr12/fr12 (5).jpeg',])">
+            <div class="img-container"><img src="fr12/fr12 (1).jpeg"></div>
+            <div class="info">
+                <h3>Ford Ranger 2012</h3>
+                <spa n class="price">$140,000</span>
+            </div>
+        </div>
+
+   <div class="car-card" onmousemove="tiltEffect(event, this)" onmouseleave="resetTilt(this)"
+            onclick="openModal('GMC Sierra 2006', '$150,000 ', ' • MotorV8 • 98,000KM • Manual', ' GMC Sierra 2006 para trabajo.', ['gmc26/gmc26 (8).jpeg','gmc26/gmc26 (3).jpeg','gmc26/gmc26 (4).jpeg','gmc26/gmc26 (5).jpeg','gmc26/gmc26 (9).jpeg','gmc26/gmc26 (7).jpeg',])">
+            <div class="img-container"><img src="gmc26/gmc26 (1).jpeg"></div>
+            <div class="info">
+                <h3>GMC Sierra 2006</h3>
+                <spa n class="price">$150,000</span>
+            </div>
+        </div>
+
+
+
+
+    </div>
+
+
+
+
+
+
+    <div id="carModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div class="modal-grid">
+                <div class="slider-container">
+                    <button class="slider-btn prev" onclick="moveSlider(-1)">&#10094;</button>
+                    <button class="slider-btn next" onclick="moveSlider(1)">&#10095;</button>
+                    <div class="slider-wrapper" id="sliderWrapper"></div>
+                </div>
+                <div class="modal-details">
+                    <div class="live-view">● <span id="viewCount">12</span> personas viendo ahora</div>
+                    <h2 id="modalTitle" style="margin:0;"></h2>
+                    <p id="modalSpecs" style="color: var(--accent); font-weight: bold;"></p>
+
+
+
+                    <p id="modalDesc" style="color:#aaa; font-size:0.9rem; margin:20px 0;"></p>
+                    <h3 id="modalPrice" class="price"></h3>
+                    <button
+                        style="width:100%; padding:18px; background:white; color:black; border:none; font-weight:900; cursor:pointer;">RESERVAR
+                        AHORA</button>
+
+                    <a href="index.html" class="btn-secondary">Salir del catálogo</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function tiltEffect(e, card) {
+            const cardRect = card.getBoundingClientRect();
+            const x = e.clientX - cardRect.left;
+            const y = e.clientY - cardRect.top;
+            const midX = cardRect.width / 2;
+            const midY = cardRect.height / 2;
+            card.style.transform = `rotateX(${(y - midY) / 10}deg) rotateY(${(midX - x) / 10}deg) scale(1.05)`;
+        }
+
+        function resetTilt(card) { card.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`; }
+
+        function changeFilter(filterValue) { document.getElementById('sliderWrapper').style.filter = filterValue; }
+
+        let mybutton = document.getElementById("btnArriba");
+        window.onscroll = function () {
+            if (document.documentElement.scrollTop > 300) mybutton.style.display = "block";
+            else mybutton.style.display = "none";
+        };
+
+        function subirAlInicio() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+        let currentSlide = 0;
+        let totalSlides = 0;
+
+        function openModal(title, price, specs, desc, images) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalPrice').innerText = price;
+            document.getElementById('modalSpecs').innerText = specs;
+            document.getElementById('modalDesc').innerText = desc;
+            document.getElementById('viewCount').innerText = Math.floor(Math.random() * 15) + 5;
+            const wrapper = document.getElementById('sliderWrapper');
+            wrapper.innerHTML = '';
+            wrapper.style.filter = 'none';
+            totalSlides = images.length;
+            currentSlide = 0;
+            wrapper.style.transform = `translateX(0)`;
+            images.forEach(imgUrl => {
+                const img = document.createElement('img');
+                img.src = imgUrl;
+                wrapper.appendChild(img);
+            });
+            document.getElementById('carModal').style.display = "block";
+            document.body.style.overflow = "hidden";
+        }
+
+        function moveSlider(direction) {
+            const wrapper = document.getElementById('sliderWrapper');
+            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+            wrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+
+        function closeModal() {
+            document.getElementById('carModal').style.display = "none";
+            document.body.style.overflow = "auto";
+        }
+
+        window.onclick = function (event) {
+            if (event.target == document.getElementById('carModal')) closeModal();
+        }
+    </script>
+
+</body>
+
+</html>
