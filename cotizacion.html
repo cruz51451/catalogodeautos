@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotización | AVANCE LUXURY MX</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        :root {
+            --accent: #e63946;
+            --dark: #0a0a0a;
+            --dark-soft: #161616;
+            --text-light: #ffffff;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--dark);
+            color: var(--text-light);
+            margin: 0;
+            padding: 40px 8%;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--dark-soft);
+            padding: 40px;
+            border: 1px solid var(--glass);
+            border-top: 4px solid var(--accent);
+        }
+
+        h1 { font-weight: 900; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 10px; }
+        .subtitle { color: var(--accent); font-weight: 700; margin-bottom: 30px; font-size: 0.9rem; letter-spacing: 2px; }
+        
+        .form-group { margin-bottom: 25px; }
+        
+        label { display: block; margin-bottom: 10px; font-weight: 700; font-size: 0.8rem; color: #a0a0a0; text-transform: uppercase; }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            background: var(--dark);
+            border: 1px solid #333;
+            color: white;
+            font-family: 'Montserrat';
+            font-size: 1.1rem;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus { border-color: var(--accent); }
+        input:disabled { opacity: 0.6; cursor: not-allowed; background: #000; }
+
+        .result-box {
+            background: var(--accent);
+            padding: 30px;
+            margin-top: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(230, 57, 70, 0.2);
+        }
+
+        .result-box h2 { margin: 0; font-size: 2.2rem; font-weight: 900; }
+        .result-box p { margin: 5px 0 0; opacity: 0.9; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+
+        .btn-group { display: flex; gap: 15px; margin-top: 30px; }
+
+        .btn {
+            flex: 1;
+            padding: 18px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            text-transform: uppercase;
+            transition: 0.3s;
+            letter-spacing: 1px;
+        }
+
+        .btn-calc { background: white; color: var(--dark); }
+        .btn-pdf { background: transparent; border: 2px solid var(--accent); color: white; }
+        .btn:hover { transform: translateY(-3px); filter: brightness(1.1); }
+
+        .back-link { display: inline-block; margin-bottom: 20px; color: var(--accent); text-decoration: none; font-size: 0.8rem; font-weight: 700; }
+
+        @media (max-width: 600px) {
+            .btn-group { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="back-link">← VOLVER AL INICIO</a>
+
+    <div class="container">
+        <h1>COTIZADOR AVANCE</h1>
+        <div class="subtitle">MÉXICO - TASA PREFERENCIAL</div>
+        
+        <div class="form-group">
+            <label>Monto a Financiar (Pesos Mexicanos MXN)</label>
+            <input type="number" id="monto" placeholder="Ej. 1,500,000" value="750000">
+        </div>
+
+        <div class="form-group">
+            <label>Tasa de Interés Anual Fija</label>
+            <input type="text" id="tasa" value="11.52% Anual" disabled>
+        </div>
+
+        <div class="form-group">
+            <label>Plazo del Crédito (Meses: 12 - 60)</label>
+            <input type="number" id="meses" min="12" max="60" value="24">
+        </div>
+
+        <div class="result-box">
+            <p>Pago Mensual (IVA incluido)</p>
+            <h2 id="cuota-display">$0.00</h2>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-calc" onclick="calcular()">Calcular Pago</button>
+            <button class="btn btn-pdf" onclick="generarPDF()">Descargar Tabla de Amortización</button>
+        </div>
+    </div>
+
+    <script>
+        const TASA_ANUAL = 11.52 / 100;
+
+        // Formateador de moneda MXN
+        const formatoMXN = new Intl.NumberFormat('es-MX', {
+            style: 'currency',
+            currency: 'MXN',
+            minimumFractionDigits: 2
+        });
+
+        function calcular() {
+            const P = parseFloat(document.getElementById('monto').value);
+            const n = parseInt(document.getElementById('meses').value);
+            
+            if (isNaN(P) || P <= 0) {
+                alert("Por favor, ingresa un monto válido.");
+                return;
+            }
+
+            if (n < 12 || n > 60) {
+                alert("El plazo debe ser mínimo de 12 meses y máximo de 60 meses.");
+                return;
+            }
+
+            const i = TASA_ANUAL / 12;
+            const cuota = (P * i) / (1 - Math.pow(1 + i, -n));
+            
+            document.getElementById('cuota-display').innerText = formatoMXN.format(cuota);
+            return { cuota, P, n, i };
+        }
+
+        function generarPDF() {
+            const datos = calcular();
+            if (!datos) return;
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // --- Encabezado ---
+            doc.setFillColor(10, 10, 10);
+            doc.rect(0, 0, 210, 40, 'F');
+            doc.setTextColor(230, 57, 70);
+            doc.setFontSize(22);
+            doc.text("AVANCE", 15, 25);
+            
+            doc.setTextColor(150, 150, 150);
+            doc.setFontSize(10);
+            doc.text("COTIZACIÓN AUTOMOTRIZ PERSONALIZADA - MÉXICO", 15, 33);
+
+            // --- Detalles del Crédito ---
+            doc.setTextColor(0, 0, 0);
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(12);
+            doc.text("RESUMEN DE COTIZACIÓN", 15, 55);
+            
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(11);
+            doc.text(`Monto del crédito: ${formatoMXN.format(datos.P)}`, 15, 65);
+            doc.text(`Tasa de interés: 11.52% Fija Anual`, 15, 72);
+            doc.text(`Plazo solicitado: ${datos.n} meses`, 15, 79);
+            doc.text(`Pago mensual estimado: ${formatoMXN.format(datos.cuota)}`, 15, 86);
+
+            // --- Tabla de Amortización ---
+            const tabla = [];
+            let saldo = datos.P;
+            for (let j = 1; j <= datos.n; j++) {
+                let interesMensual = saldo * datos.i;
+                let capital = datos.cuota - interesMensual;
+                saldo -= capital;
+                
+                // Evitar negativos por redondeo en el último mes
+                if (j === datos.n) saldo = 0;
+
+                tabla.push([
+                    j, 
+                    formatoMXN.format(datos.cuota), 
+                    formatoMXN.format(interesMensual), 
+                    formatoMXN.format(capital), 
+                    formatoMXN.format(Math.max(0, saldo))
+                ]);
+            }
+
+            doc.autoTable({
+                startY: 95,
+                head: [['Mes', 'Pago Mensual', 'Interés', 'Abono Capital', 'Saldo Insoluto']],
+                body: tabla,
+                headStyles: { fillColor: [230, 57, 70], halign: 'center' },
+                columnStyles: {
+                    0: { halign: 'center' },
+                    1: { halign: 'right' },
+                    2: { halign: 'right' },
+                    3: { halign: 'right' },
+                    4: { halign: 'right' }
+                },
+                theme: 'striped'
+            });
+
+            // Pie de página del PDF
+            const finalY = doc.lastAutoTable.finalY + 10;
+            doc.setFontSize(8);
+            doc.setTextColor(100, 100, 100);
+            doc.text("* Sujeto a aprobación de crédito. Cifras expresadas en Pesos Mexicanos (MXN).", 15, finalY);
+
+            doc.save(`Cotizacion_MXN_Avance_${new Date().toLocaleDateString()}.pdf`);
+        }
+    </script>
+</body>
+</html>
