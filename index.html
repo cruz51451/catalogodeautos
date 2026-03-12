@@ -83,7 +83,7 @@
         /* --- AJUSTES PARA MÓVIL (Responsivo) --- */
         @media (max-width: 768px) {
             nav {
-                flex-direction: column; /* Pone el logo arriba y los links abajo */
+                flex-direction: column;
                 padding: 20px 5%;
                 text-align: center;
             }
@@ -93,23 +93,28 @@
             }
 
             .nav-links {
-                flex-direction: row; /* Mantiene los links en fila pero con menos espacio */
+                flex-direction: row;
                 justify-content: center;
-                flex-wrap: wrap; /* Si no caben, bajan solos sin romperse */
+                flex-wrap: wrap;
                 gap: 15px;
             }
 
             .nav-links a {
-                margin-left: 0; /* Quitamos el margen lateral fijo */
+                margin-left: 0;
                 font-size: 0.75rem;
             }
 
             .nav-links .btn-nav {
-                padding: 8px 15px; /* Botón un poco más pequeño en móvil */
+                padding: 8px 15px;
             }
             
             .hero-content h1 {
-                font-size: 2.5rem; /* Evita que el título se vea gigante en móvil */
+                font-size: 2.5rem;
+            }
+
+            .hero-btns {
+                flex-direction: column;
+                gap: 15px;
             }
         }
 
@@ -145,6 +150,13 @@
             text-transform: uppercase;
         }
 
+        /* Contenedor de botones del Hero */
+        .hero-btns {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
         .btn-main {
             display: inline-block;
             background: var(--accent);
@@ -153,14 +165,33 @@
             text-decoration: none;
             font-weight: 700;
             border-radius: 2px;
-            margin-top: 30px;
             transition: 0.3s ease;
             box-shadow: 0 10px 20px rgba(230, 57, 70, 0.3);
+            border: 2px solid var(--accent);
         }
 
         .btn-main:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 30px rgba(230, 57, 70, 0.5);
+        }
+
+        /* Estilo para el nuevo botón de cotización */
+        .btn-secondary {
+            display: inline-block;
+            background: transparent;
+            color: white;
+            padding: 18px 45px;
+            text-decoration: none;
+            font-weight: 700;
+            border-radius: 2px;
+            transition: 0.3s ease;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: var(--dark);
+            transform: translateY(-5px);
         }
 
         /* Sección Identidad */
@@ -234,10 +265,11 @@
 
     <nav>
         <a href="#" class="logo">AVANCE</a>
-        <div class="nav-links">
+         <div class="nav-links">
             <a href="#quienes-somos">Nosotros</a>
-            <a href="#identidad">Identidad</a>
-            <a href="catalogo.html" class="btn-nav">Catálogo</a> </div>
+            <a href="cotizacion.html">Cotización</a> <a href="referencias.html">Referencias</a> 
+            <a href="catalogo.html" class="btn-nav">Catálogo</a>
+        </div>
     </nav>
 
     <section class="hero">
@@ -245,7 +277,10 @@
             <span>The Future of Driving</span>
             <h1>INGENIERÍA SIN LÍMITES</h1>
             <p>Experimenta la perfección técnica y el diseño de vanguardia en cada detalle. Tu próximo nivel comienza aquí.</p>
-            <a href="catalogo.html" class="btn-main">VER COLECCIÓN 2026</a>
+            
+            <div class="hero-btns">
+                <a href="catalogo.html" class="btn-main">VER COLECCIÓN 2026</a>
+                <a href="cotizacion.html" class="btn-secondary">COTIZACIÓN</a> </div>
         </div>
     </section>
 
@@ -272,7 +307,7 @@
     </section>
 
     <footer id="identidad">
-        &copy; 2026 AVANCELUXURY GROUP. TODOS LOS DERECHOS RESERVADOS.
+        &copy; 2026 AVANCE GROUP. TODOS LOS DERECHOS RESERVADOS.
     </footer>     
 
 </body>
