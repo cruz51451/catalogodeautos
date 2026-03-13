@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planes de Financiamiento | AutoElite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #e63946;
+            --dark: #0a0a0a;
+            --dark-soft: #161616;
+            --text-light: #ffffff;
+            --text-muted: #a0a0a0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- NAVEGACIÓN --- */
+        nav {
+            padding: 20px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            font-weight: 900;
+            font-size: 1.4rem;
+            letter-spacing: 3px;
+            color: var(--text-light);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        /* --- HERO --- */
+        .finance-header {
+            padding: 150px 8% 60px;
+            text-align: center;
+            background: linear-gradient(to bottom, rgba(10, 10, 10, 0.7), var(--dark)),
+                url('https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .finance-header h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .finance-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        /* --- GRID DE PLANES --- */
+        .plans-container {
+            padding: 40px 8% 100px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .plan-card {
+            background: var(--dark-soft);
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            transition: 0.4s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .plan-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-10px);
+            background: rgba(230, 57, 70, 0.05);
+        }
+
+        .plan-card.featured {
+            border: 2px solid var(--accent);
+        }
+
+        .featured-label {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--accent);
+            padding: 5px 15px;
+            font-size: 0.7rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .btn-open {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 25px;
+            border: 1px solid var(--accent);
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.8rem;
+            transition: 0.3s;
+        }
+
+        /* --- MODAL --- */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: var(--dark-soft);
+            max-width: 600px;
+            width: 100%;
+            padding: 50px;
+            border-left: 5px solid var(--accent);
+            position: relative;
+            animation: modalFade 0.4s ease;
+        }
+
+        @keyframes modalFade {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-content h2 {
+            color: var(--accent);
+            font-size: 2rem;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .modal-content h4 {
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            font-weight: 400;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .modal-content ul {
+            list-style: none;
+        }
+
+        .modal-content ul li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        .modal-content ul li::before {
+            content: "✓";
+            margin-right: 15px;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn-modal {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: 'Montserrat', sans-serif;
+            transition: 0.3s;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--accent);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent);
+        }
+
+        footer {
+            padding: 40px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            border-top: 1px solid #1a1a1a;
+        }
+
+        @media (max-width: 768px) {
+            .modal-content {
+                padding: 30px;
+            }
+
+            .modal-actions {
+                flex-direction: column;
+            }
+
+            .finance-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">AVANCE<span>.</span></a>
+        <a href="index.html"
+            style="color:white; text-decoration:none; font-size:0.8rem; font-weight:700; letter-spacing:1px;">VOLVER</a>
+    </nav>
+
+    <header class="finance-header">
+        <h1>PLANES DE FINANCIAMIENTO</h1>
+        <p>Seleccione un plan para ver requisitos y beneficios exclusivos.</p>
+    </header>
+
+    <div class="plans-container">
+        <div class="plan-card" onclick="openModal('convencional')">
+            <h3>Plan Convencional</h3>
+            <p>Estabilidad y plazos fijos para tu tranquilidad.</p>
+            <span class="btn-open">VER DETALLES</span>
+        </div>
+
+        <div class="plan-card featured" onclick="openModal('principal')">
+            <div class="featured-label">MÁS ELEGIDO</div>
+            <h3>Plan Principal</h3>
+            <p>Mínimos requisitos y aprobación inmediata.</p>
+            <span class="btn-open">VER DETALLES</span>
+        </div>
+
+        <div class="plan-card" onclick="openModal('contado')">
+            <h3>Pago de Contado</h3>
+            <p>Ahorro máximo y entrega express garantizada.</p>
+            <span class="btn-open">VER DETALLES</span>
+        </div>
+    </div>
+
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Título del Plan</h2>
+            <h4 id="modalSubtitle">Requisitos</h4>
+            <div id="modalBody"></div>
+
+            <div class="modal-actions">
+                <button class="btn-modal btn-secondary" id="btnToggle">VER BENEFICIOS</button>
+                <button class="btn-modal btn-primary" onclick="closeModal()">ENTENDIDO</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 AVANCE GROUP. TODOS LOS DERECHOS RESERVADOS.
+    </footer>
+
+    <script>
+        const info = {
+            convencional: {
+                title: "Plan Convencional",
+                requisitos: [
+                    "Enganche desde un 20% a 60% del valor total.",
+                    "Un Aval con propiedad.",
+                    "Revisión de Buró de Crédito.",
+                    "Comprobante de ingresos nominal.",
+                    "Comprobante de Domicilio.",
+                     "Entrega de 48 a 72 horas."
+                ],
+                beneficios: [
+                    "Tasa de interés fija anual.",
+                    "Plazos cómodos de 12 a 60 meses.",
+                    "Seguro de cobertura amplia financiado (BBVA, QUALITAS, GNP.).",
+                    "Emplacamiento (Todos los Estados menos fronterizos).",
+                    "6 meses a 1 año de garantia de fallas mecanicas (Dependiendo el año del vehiculo)."
+                   
+                ]
+            },
+            principal: {
+                title: "Plan Principal",
+                requisitos: [
+                    "INE Vigente.",
+                    "Comprobante de Domicilio.",
+                    "2 Referencias (Validación Telefónica).",
+                    "Enganche Mínimo accesible.",
+                    "Seguridad Satelital activa.",
+                     "Entrega de 48 a 72 horas."
+                ],
+                beneficios: [
+                    "Tasa de interés fija anual.",
+                    "Plazos cómodos de 12 a 60 meses.",
+                    "Seguro de 1 año de cobertura amplia financiado (BBVA, QUALITAS, GNP.).",
+                    "Emplacamiento (Todos los Estados menos fronterizos).",
+                    "6 meses a 1 año de garantia de fallas mecanicas (Dependiendo el año del vehiculo).",
+                    "Chip GPS anti rrobo.",
+                    "7 dias de satisfaccio al cliente"
+                ]
+            },
+            contado: {
+                title: "Pago de Contado",
+                requisitos: [
+                    "Identificación Oficial (INE).",
+                    "Comprobante de Domicilio.",
+                    "Firma de contrato de entrega.",
+                    "Apartado de un 16% a un 25%.",
+                    "Entrega de 24 a 48 horas."
+                ],
+                beneficios: [
+                    "Precio especial de liquidación (Descuento Directo Depende la promocion del mes).",
+                    "Entrega de unidad en 24-72 horas.",
+                    "Permiso vehicular de 30 dias.",
+                    "4 dias de satifaccion al cliente."
+                ]
+            }
+        };
+
+        let currentPlan = "";
+        let showingRequisitos = true;
+
+        function openModal(planKey) {
+            currentPlan = planKey;
+            showingRequisitos = true; // Siempre abrir mostrando requisitos primero
+            updateModalContent();
+            document.getElementById('infoModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function updateModalContent() {
+            const data = info[currentPlan];
+            const title = document.getElementById('modalTitle');
+            const subtitle = document.getElementById('modalSubtitle');
+            const body = document.getElementById('modalBody');
+            const btn = document.getElementById('btnToggle');
+
+            title.innerText = data.title;
+
+            const listaAMostrar = showingRequisitos ? data.requisitos : data.beneficios;
+            subtitle.innerText = showingRequisitos ? "Requisitos del Plan" : "Beneficios Extra";
+            btn.innerText = showingRequisitos ? "Ver Beneficios" : "Ver Requisitos";
+
+            let html = "<ul>";
+            listaAMostrar.forEach(item => {
+                html += `<li>${item}</li>`;
+            });
+            html += "</ul>";
+
+            body.innerHTML = html;
+        }
+
+        document.getElementById('btnToggle').onclick = function () {
+            showingRequisitos = !showingRequisitos;
+            updateModalContent();
+        };
+
+        function closeModal() {
+            document.getElementById('infoModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        window.onclick = function (event) {
+            if (event.target == document.getElementById('infoModal')) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+
+</html>
