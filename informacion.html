@@ -51,7 +51,9 @@
             text-decoration: none;
         }
 
-        .logo span { color: var(--accent); }
+        .logo span {
+            color: var(--accent);
+        }
 
         /* --- HERO --- */
         .finance-header {
@@ -106,7 +108,9 @@
             background: rgba(230, 57, 70, 0.05);
         }
 
-        .plan-card.featured { border: 2px solid var(--accent); }
+        .plan-card.featured {
+            border: 2px solid var(--accent);
+        }
 
         .featured-label {
             position: absolute;
@@ -155,17 +159,26 @@
             background: var(--dark-soft);
             max-width: 550px;
             width: 100%;
-            max-height: 90vh; /* Evita que el modal se salga de la pantalla */
+            max-height: 90vh;
+            /* Evita que el modal se salga de la pantalla */
             padding: 30px;
             border-left: 4px solid var(--accent);
             position: relative;
-            overflow-y: auto; /* Scroll interno si es necesario */
+            overflow-y: auto;
+            /* Scroll interno si es necesario */
             animation: modalFade 0.3s ease-out;
         }
 
         @keyframes modalFade {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         .modal-content h2 {
@@ -219,8 +232,14 @@
             transition: 0.2s;
         }
 
-        .btn-primary { background: var(--accent); }
-        .btn-secondary { background: #222; border: 1px solid #444; }
+        .btn-primary {
+            background: var(--accent);
+        }
+
+        .btn-secondary {
+            background: #222;
+            border: 1px solid #444;
+        }
 
         footer {
             padding: 30px;
@@ -235,12 +254,15 @@
             .modal-content {
                 padding: 20px;
             }
+
             .modal-actions {
                 flex-direction: column;
             }
+
             .btn-modal {
                 width: 100%;
             }
+
             nav {
                 padding: 15px 20px;
             }
@@ -252,7 +274,8 @@
 
     <nav>
         <a href="index.html" class="logo">AVANCE<span>.</span></a>
-        <a href="index.html" style="color:white; text-decoration:none; font-size:0.7rem; font-weight:700; letter-spacing:1px; border: 1px solid rgba(255,255,255,0.2); padding: 5px 10px;">VOLVER</a>
+        <a href="index.html"
+            style="color:white; text-decoration:none; font-size:0.7rem; font-weight:700; letter-spacing:1px; border: 1px solid rgba(255,255,255,0.2); padding: 5px 10px;">VOLVER</a>
     </nav>
 
     <header class="finance-header">
@@ -264,7 +287,8 @@
         <div class="plan-card" onclick="openModal('convencional')">
             <div>
                 <h3>Plan Convencional</h3>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 10px;">Estabilidad y plazos fijos para tu tranquilidad.</p>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 10px;">Estabilidad y plazos fijos
+                    para tu tranquilidad.</p>
             </div>
             <span class="btn-open">VER DETALLES</span>
         </div>
@@ -273,7 +297,8 @@
             <div class="featured-label">MÁS ELEGIDO</div>
             <div>
                 <h3>Plan Principal</h3>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 10px;">Mínimos requisitos y aprobación inmediata.</p>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 10px;">Mínimos requisitos y
+                    aprobación inmediata.</p>
             </div>
             <span class="btn-open">VER DETALLES</span>
         </div>
@@ -281,7 +306,8 @@
         <div class="plan-card" onclick="openModal('contado')">
             <div>
                 <h3>Pago de Contado</h3>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 10px;">Ahorro máximo y entrega express garantizada.</p>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 10px;">Ahorro máximo y entrega
+                    express garantizada.</p>
             </div>
             <span class="btn-open">VER DETALLES</span>
         </div>
@@ -337,9 +363,12 @@
                 beneficios: [
                     "Tasa de interés fija anual.",
                     "Aprobación rápida.",
-                    "Seguro cobertura amplia incluido.",
                     "Chip GPS anti-robo.",
-                    "7 días de satisfacción al cliente."
+                    "7 días de satisfacción al cliente.",
+                    "Plazos de 12 a 60 meses.",
+                    "Seguro financiado (BBVA, Qualitas, GNP).",
+                    "Emplacamiento incluido (Casi todo el país).",
+                    "Garantía mecánica de 6 a 12 meses."
                 ]
             },
             contado: {
